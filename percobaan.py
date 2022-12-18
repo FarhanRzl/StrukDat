@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 import csv
-import heapq as pq
+from Structure import PriorityQueue as Data
 
 
 class Main:
@@ -55,9 +55,6 @@ class Main:
         self.menu() if [str(self.uid.get()), str(self.pwd.get())] in self.login else self.not_log()
 
     def Add(self):
-        # print(True)
-        # self.tbl.delete()
-
         value = None
         if self.layanan.get() == ' Layanan YES':
             value = int(self.jrk.get())//3
@@ -74,11 +71,11 @@ class Main:
         else:
             return
 
-        pq.heappush(self.data, [value, self.bar.get(), self.tgl.get(), self.krm.get(), self.trm.get(), int(self.jrk.get()), self.layanan.get()])
-
+        self.data.insert([str(value), self.bar.get(), self.tgl.get(), self.krm.get(), self.trm.get(), int(self.jrk.get()), self.layanan.get()])
+        
         with open ('database.csv', 'w') as file:
             fl = csv.writer(file)
-            fl.writerows(self.data)
+            fl.writerows(self.data.queue)
 
         f = open("database.csv", "r")
         
@@ -94,11 +91,11 @@ class Main:
         lbl3.pack(side=BOTTOM, pady=7, fill=BOTH)
 
     def menu(self):
-        self.data = []
+        self.data = Data()
         with open('database.csv') as file:
             fl = csv.reader(file)
             for i in fl:
-                self.data.append(i)
+                self.data.insert(i)
 
         self.LgFrame.destroy()
         self.window.geometry('900x500')
@@ -144,6 +141,7 @@ class Main:
 
         btP = Button(mFr8, text='Pop', command=self.popdata)
         btP.pack()
+
     def Insert(self):
         ins = Tk()
         ins.title('')
@@ -226,7 +224,8 @@ class Main:
         ins.mainloop()
 
     def popdata(self):
-        pass
+        print(True)
+        # pq.heappop(self.data)
 
 if __name__ == '__main__':
     Main()

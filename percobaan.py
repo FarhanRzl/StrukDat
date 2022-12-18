@@ -55,17 +55,36 @@ class Main:
         self.menu() if [str(self.uid.get()), str(self.pwd.get())] in self.login else self.not_log()
 
     def Add(self):
-        print(True)
-        # self.data.append([self.jrk])
+        # print(True)
+        # self.tbl.delete()
 
-        # with open ('database.csv', 'w') as file:
-        #     fl = csv.writer(file)
-        #     fl.writerows(self.data)
+        value = None
+        if self.layanan.get() == ' Layanan YES':
+            value = int(self.jrk.get())//3
 
-        print(self.L1.value)
-        print(self.L2.value)
-        print(self.L3.value)
-        print(self.L4.value)
+        elif self.layanan.get() == ' Layanan SS':
+            value = int(self.jrk.get())//1.5
+
+        elif self.layanan.get() == ' Layanan REG':
+            value = int(self.jrk.get())
+        
+        elif self.layanan.get() == ' Layanan OKE':
+            value = int(self.jrk.get())*2
+
+        else:
+            return
+
+        pq.heappush(self.data, [value, self.bar.get(), self.tgl.get(), self.krm.get(), self.trm.get(), int(self.jrk.get()), self.layanan.get()])
+
+        with open ('database.csv', 'w') as file:
+            fl = csv.writer(file)
+            fl.writerows(self.data)
+
+        f = open("database.csv", "r")
+        
+        for index, line in enumerate(f):
+            temp = line.rstrip().split(',')
+            self.tbl.insert('', END, iid = index, text = temp[1], values = temp[2:])
 
     def not_log(self):
         Fr4 = Frame(self.LgFrame)
@@ -114,7 +133,7 @@ class Main:
 
         for index, line in enumerate(f):
             temp = line.rstrip().split(',')
-            self.tbl.insert('', END, iid = index, text = temp[0], values = temp[1:])
+            self.tbl.insert('', END, iid = index, text = temp[1], values = temp[2:])
 
         #######################################
         mFr8 = Frame(mFrame)
@@ -123,6 +142,8 @@ class Main:
         btI = Button(mFr8, text='Insert', command=self.Insert)
         btI.pack()
 
+        btP = Button(mFr8, text='Pop', command=self.popdata)
+        btP.pack()
     def Insert(self):
         ins = Tk()
         ins.title('')
@@ -170,7 +191,8 @@ class Main:
         iFr5 = Frame(ins)
         iFr5.pack(fill=X, pady=5)
 
-        Label(iFr5, text='Jarak\t\t').pack(side=LEFT)
+        ilbl6 = Label(iFr5, text='Jarak\t\t')
+        ilbl6.pack(side=LEFT)
 
         self.jrk = Entry(iFr5)
         self.jrk.pack(side=LEFT)
@@ -179,20 +201,32 @@ class Main:
         iFr6 = Frame(ins)
         iFr6.pack(fill=X, pady=5)
 
-        Label(iFr6, text='Layanan Yang Dipilih:').pack()
-        self.L1 = Radiobutton(iFr6, indicatoron=0, text='Layanan YES',value=3  ).pack() 
-        self.L2 = Radiobutton(iFr6, indicatoron=0, text='Layanan  SS',value=2  ).pack()
-        self.L3 = Radiobutton(iFr6, indicatoron=0, text='Layanan REG',value=1  ).pack()
-        self.L4 = Radiobutton(iFr6, indicatoron=0, text='Layanan OKE',value=0.5).pack()
+        ilbl7 = Label(iFr6, text='Layanan\t\t')
+        ilbl7.pack(side=LEFT)
 
+        self.n = StringVar()
+        self.layanan = ttk.Combobox(iFr6, width = 17, textvariable = self.n)
+        
+        # Adding combobox drop down list
+        # self.layanan['values'] = ('1', '2', '3', '4')
+        self.layanan['values'] = (' Layanan YES', ' Layanan SS', ' Layanan REG', ' Layanan OKE')
+        self.layanan.pack()
+        self.layanan.current(2)
+
+        # iFr7 = Frame(ins).pack(fill=X, pady=5)
+        
+        # self.layanan = Entry(iFr7).pack(side=LEFT)
         #######################################
-        iFr7 = Frame(ins)
-        iFr7.pack(fill=X, pady=5)
+        iFr8 = Frame(ins)
+        iFr8.pack(fill=X, pady=5)
 
-        iBtn = Button(iFr7, text='Insert', command=self.Add)
+        iBtn = Button(iFr8, text='Insert', command=self.Add)
         iBtn.pack()
         
         ins.mainloop()
+
+    def popdata(self):
+        pass
 
 if __name__ == '__main__':
     Main()

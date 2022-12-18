@@ -55,6 +55,9 @@ class Main:
         self.menu() if [str(self.uid.get()), str(self.pwd.get())] in self.login else self.not_log()
 
     def Add(self):
+        for item in self.tbl.get_children():
+            self.tbl.delete(item)
+        
         value = None
         if self.layanan.get() == ' Layanan YES':
             value = int(self.jrk.get())//3
@@ -81,7 +84,8 @@ class Main:
         
         for index, line in enumerate(f):
             temp = line.rstrip().split(',')
-            self.tbl.insert('', END, iid = index, text = temp[1], values = temp[2:])
+            if line != '\n':
+                self.tbl.insert('', END, iid = index, text = temp[1], values = temp[2:])
 
     def not_log(self):
         Fr4 = Frame(self.LgFrame)
@@ -95,7 +99,8 @@ class Main:
         with open('database.csv') as file:
             fl = csv.reader(file)
             for i in fl:
-                self.data.insert(i)
+                if i != []:
+                    self.data.insert(i)
 
         self.LgFrame.destroy()
         self.window.geometry('900x500')
@@ -114,7 +119,7 @@ class Main:
         mFr2 = Frame(mFrame)
         mFr2.pack(fill=BOTH, pady=5)
 
-        col = ('tanggal', 'pengirim', 'penerima', 'jarak')
+        col = ('tanggal', 'pengirim', 'penerima', 'jarak', 'layanan')
 
         self.tbl = ttk.Treeview(mFr2,columns=col)
         self.tbl.pack()
@@ -124,13 +129,15 @@ class Main:
         self.tbl.heading('pengirim', text='Pengirim')
         self.tbl.heading('penerima', text='Penerima')
         self.tbl.heading('jarak', text='Jarak')
+        self.tbl.heading('layanan', text='Layanan')
 
         ##############################################
         f = open("database.csv", "r")
 
         for index, line in enumerate(f):
             temp = line.rstrip().split(',')
-            self.tbl.insert('', END, iid = index, text = temp[1], values = temp[2:])
+            if line != '\n':
+                self.tbl.insert('', END, iid = index, text = temp[1], values = temp[2:])
 
         #######################################
         mFr8 = Frame(mFrame)
@@ -225,7 +232,23 @@ class Main:
 
     def popdata(self):
         print(True)
-        # pq.heappop(self.data)
+
+        self.data.delete()
+
+        with open('database.csv', 'w') as db:
+            dbs = csv.writer(db)
+            dbs.writerows(self.data.queue)
+
+        for item in self.tbl.get_children():
+            self.tbl.delete(item)
+
+        f = open("database.csv", "r")
+
+        for index, line in enumerate(f):
+            temp = line.rstrip().split(',')
+            if line != '\n':
+                self.tbl.insert('', END, iid = index, text = temp[1], values = temp[2:])
+
 
 if __name__ == '__main__':
     Main()

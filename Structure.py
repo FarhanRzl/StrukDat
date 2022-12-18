@@ -11,18 +11,32 @@ class PriorityQueue(object):
 	def insert(self, data):
 		self.queue.append(data)
 
+	# def delete(self):
+	# 	try:
+	# 		max_val = 0
+	# 		for i in range(len(self.queue)):
+	# 			if self.queue[i] > self.queue[max_val]:
+	# 				max_val = i
+	# 		item = self.queue[max_val]
+	# 		del self.queue[max_val]
+	# 		return item
+	# 	except IndexError:
+	# 		print()
+	# 		exit()
+
 	def delete(self):
 		try:
-			max_val = 0
+			min_val = 0
 			for i in range(len(self.queue)):
-				if self.queue[i] > self.queue[max_val]:
-					max_val = i
-			item = self.queue[max_val]
-			del self.queue[max_val]
+				if self.queue[i] < self.queue[min_val]:
+					min_val = i
+			item = self.queue[min_val]
+			del self.queue[min_val]
 			return item
 		except IndexError:
 			print()
 			exit()
+
 
 # if __name__ == '__main__':
 # 	myQueue = PriorityQueue()

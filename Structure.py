@@ -28,7 +28,7 @@ class PriorityQueue(object):
 		try:
 			min_val = 0
 			for i in range(len(self.queue)):
-				if self.queue[i] < self.queue[min_val]:
+				if float(self.queue[i][0]) < float(self.queue[min_val][0]):
 					min_val = i
 			item = self.queue[min_val]
 			del self.queue[min_val]
